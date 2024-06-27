@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.all(9.0),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.center,children: [Text("Hello Mom")],),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center,children: [Text("Hello Mom s")],),
       ),
       bottomNavigationBar: BottomNavBar(currentIndex: 0),
     );
