@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medmart/screens/dashboard_screen.dart';
+import 'package:medmart/screens/login.dart';
 import 'package:medmart/screens/product_screen.dart';
 
 void main() {
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
         cardTheme: CardTheme(color: Colors.white38,)
       ),
       debugShowCheckedModeBanner: false,
-      home: const HomeScreen(),
+      home: const Login(),
     );
   }
 }
