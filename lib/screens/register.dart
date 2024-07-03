@@ -24,8 +24,14 @@ class _RegisterState extends State<Register> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Center(
+                child: Image.asset(
+                  'assets/removebg.png',
+                  width: 360,
+                ),
+              ),
               SizedBox(
-                height: 360.0,
+                height: 350.0,
                 child: Card(
                   color: Colors.white,
                   elevation: 5.0,
@@ -41,10 +47,10 @@ class _RegisterState extends State<Register> {
                         children: <Widget>[
                           TextFormField(
                             decoration:
-                                const InputDecoration(
-                                    labelText: ('Name'),
-                                  prefixIcon: Icon(Icons.person),
-                                ),
+                            const InputDecoration(
+                              labelText: ('Name'),
+                              prefixIcon: Icon(Icons.person),
+                            ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter a name';
@@ -58,10 +64,10 @@ class _RegisterState extends State<Register> {
                           const SizedBox(height: 10.0),
                           TextFormField(
                             decoration:
-                                const InputDecoration(
-                                    labelText: ('Email'),
-                                  prefixIcon: Icon(Icons.email_outlined),
-                                ),
+                            const InputDecoration(
+                              labelText: ('Email'),
+                              prefixIcon: Icon(Icons.email_outlined),
+                            ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter an email';
@@ -75,10 +81,10 @@ class _RegisterState extends State<Register> {
                           const SizedBox(height: 10.0),
                           TextFormField(
                             decoration:
-                                const InputDecoration(
-                                    labelText: ('Password'),
-                                  prefixIcon: Icon(Icons.lock),
-                                ),
+                            const InputDecoration(
+                              labelText: ('Password'),
+                              prefixIcon: Icon(Icons.lock),
+                            ),
                             obscureText: true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {

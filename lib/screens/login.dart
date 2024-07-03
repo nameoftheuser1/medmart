@@ -28,9 +28,9 @@ class _LoginState extends State<Login> {
                 width: 360,
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 5.0),
             SizedBox(
-              height: 400.0,
+              height: 35.0,
               child: Card(
                 color: Colors.white,
                 elevation: 5.0,
@@ -105,8 +105,20 @@ class _LoginState extends State<Login> {
                                 ),
                               ),
                             ),
+                            SizedBox(height:4.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'or',
+                                  style: TextStyle(
+                                      color: Colors.black
+                                  ),
+                                ),
+                              ],
+                            ),
                             SizedBox(
-                              width: 200.0,
+                              width: 201.0,
                               child: ElevatedButton(
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all<Color>(
