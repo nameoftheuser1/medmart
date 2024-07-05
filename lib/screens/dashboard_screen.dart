@@ -101,7 +101,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 30, color: Colors.black12),
+            Icon(icon, size: 30, color: Colors.black54),
             const SizedBox(height: 10),
             Text(
               title,
