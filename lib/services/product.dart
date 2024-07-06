@@ -1,4 +1,4 @@
-class Product{
+class Product {
   String productName;
   String genericName;
   String category;
@@ -11,4 +11,14 @@ class Product{
     required this.category,
     required this.productDescription,
     required this.price});
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      productName: json['productName'],
+      genericName: json['genericName'],
+      category: json['category'],
+      price: json['price'].toDouble(),
+      productDescription: json['productDescription'],
+    );
+  }
 }
