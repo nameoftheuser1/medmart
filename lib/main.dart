@@ -34,7 +34,12 @@ class MyApp extends StatelessWidget {
         cardTheme: const CardTheme(color: Colors.white38,)
       ),
       debugShowCheckedModeBanner: false,
-      home: const HomeScreen(),
+      initialRoute: '/',
+      routes: {
+        '/' : (context) => HomeScreen(),
+        '/newproduct' : (context) => newProduct(),
+      },
+
     );
   }
 }
