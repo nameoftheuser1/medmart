@@ -30,17 +30,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            SizedBox(height: .0,),
-            Center(
-              child: Image.asset(
-                'assets/removebg.png',
-                width: 300,
-              ),
-            ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 20),
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
@@ -94,25 +87,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }) {
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
+        borderRadius: BorderRadius.circular(30.0),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 30, color: Colors.black54),
+            Icon(icon, size: 18, color: Colors.white54),
             const SizedBox(height: 10),
             Text(
               title,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             Text(
               value,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 25, color: color),
+              style: TextStyle(fontSize: 15, color: Colors.green),
             ),
           ],
         ),
