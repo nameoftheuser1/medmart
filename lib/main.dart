@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:medmart/screens/dashboard_screen.dart';
+import 'package:medmart/screens/inventory_screen.dart';
+import 'package:medmart/screens/login.dart';
+import 'package:medmart/screens/product_batch_screen.dart';
 import 'package:medmart/screens/product_screen.dart';
+import 'package:medmart/screens/register.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,10 +32,16 @@ class MyApp extends StatelessWidget {
           showSelectedLabels: true,
           showUnselectedLabels: true,
         ),
-        cardTheme: CardTheme(color: Colors.white38,)
+        cardTheme: const CardTheme(color: Colors.white38,)
       ),
       debugShowCheckedModeBanner: false,
-      home: const HomeScreen(),
+      initialRoute: '/',
+      routes: {
+        '/' : (context) => HomeScreen(),
+        '/login': (context) => Login(),
+        '/newproduct' : (context) => newProduct(),
+      },
+
     );
   }
 }
@@ -48,8 +58,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Remove the const keyword
   final List<Widget> _widgetOptions = [
-    DashboardScreen(),
-    ProductScreen(),
+    const DashboardScreen(),
+    const ProductScreen(),
+    const ProductBatchScreen(),
+    const InventoryScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -63,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
@@ -72,14 +85,15 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.shopping_cart),
             label: 'Products',
           ),
-          // BottomNavigationBarItem(
-          //     icon: Icon(Icons.inventory),
-          //     label: 'Inventory',
-          // ),
-          // BottomNavigationBarItem(
-          //     icon: Icon(Icons.person),
-          //     label: 'Profile',
-          // )
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag),
+              label: 'Product Batch',
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Inventory',
+          ),
+
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
