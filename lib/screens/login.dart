@@ -29,7 +29,7 @@ class _LoginState extends State<Login> {
                 width: 360,
               ),
             ),
-            SizedBox(height: 5.0),
+            const SizedBox(height: 5.0),
             SizedBox(
               height: 400.0,
               child: Card(
@@ -47,7 +47,7 @@ class _LoginState extends State<Login> {
                       children: [
                         TextFormField(
                           keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Username',
                             prefixIcon: Icon(Icons.person),
                           ),
@@ -80,23 +80,23 @@ class _LoginState extends State<Login> {
                             _password = value!;
                           },
                         ),
-                        SizedBox(height: 30.0),
+                        const SizedBox(height: 30.0),
                         Column(
                           children: [
                             SizedBox(
                               width: 200.0,
                               child: ElevatedButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all<Color>(
-                                    Color.fromARGB(255, 73, 105, 76),
-                                  ),
+                                style: const ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                      Color.fromARGB(255, 73, 105, 76)),
                                 ),
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
                                     _formKey.currentState!.save();
                                     // Handle the login logic here
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('Logging in')),
+                                      const SnackBar(
+                                          content: Text('Logging in')),
                                     );
                                   }
                                 },
@@ -106,26 +106,19 @@ class _LoginState extends State<Login> {
                                 ),
                               ),
                             ),
-                            SizedBox(height:4.0),
-                            Row(
+                            const SizedBox(height: 4.0),
+                            const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Text(
                                   'or',
-                                  style: TextStyle(
-                                      color: Colors.black
-                                  ),
+                                  style: TextStyle(color: Colors.black),
                                 ),
                               ],
                             ),
                             SizedBox(
                               width: 201.0,
                               child: ElevatedButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all<Color>(
-                                    Color.fromARGB(255, 77, 77, 153),
-                                  ),
-                                ),
                                 onPressed: () {
                                   Navigator.pushReplacement(
                                     context,
@@ -134,6 +127,10 @@ class _LoginState extends State<Login> {
                                     ),
                                   );
                                 },
+                                style: const ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                      Color.fromARGB(255, 77, 77, 153)),
+                                ),
                                 child: const Text(
                                   'Create an Account',
                                   style: TextStyle(color: Colors.white),
