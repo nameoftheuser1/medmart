@@ -18,7 +18,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   Future<List<dynamic>> fetchData() async {
     final response =
-        await http.get(Uri.parse('http://10.0.2.2:8080/api/v1/product/all'));
+    await http.get(Uri.parse('http://10.0.2.2:8080/api/v1/product/all'));
 
     final data = jsonDecode(response.body);
 
@@ -32,20 +32,9 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    fetchData();
     products = fetchData();
   }
-
-  // List products = <Product>[
-  //   Product(productName: "practice", genericName: "null", category: "category", price: 21.0, productDescription: "description"),
-  //   Product(productName: "practice_1", genericName: "null", category: "category", price: 19.0, productDescription: "description"),
-  // ];
-
-  // Widget cardTemplate(product){
-  //   return ProductCard(product: product);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +42,33 @@ class _ProductScreenState extends State<ProductScreen> {
       appBar: AppBar(
         title: const Text("Products"),
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Column(),
+      body: FutureBuilder<List<dynamic>>(
+        future: products,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: SpinKitFadingCircle(
+                color: Colors.blue,
+                size: 50.0,
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text('No products found'),
+            );
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                return ProductCard(product: snapshot.data![index]);
+              },
+            );
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
@@ -102,13 +115,23 @@ class _NewProductState extends State<NewProduct> {
       );
 
       if (response.statusCode == 200) {
-        // Successfully added product
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Product added successfully!')));
+          const SnackBar(
+            content: Text('Product added successfully!'),
+            duration: Duration(seconds: 2),
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.only(top: 64),
+          ),
+        );
+
+        // Wait for the SnackBar to be displayed
+        await Future.delayed(const Duration(seconds: 2));
+
+        Navigator.pushNamed(context, '/products');
       } else {
-        // Failed to add product
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to add product.')));
+          const SnackBar(content: Text('Failed to add product.')),
+        );
       }
     }
   }
@@ -137,97 +160,109 @@ class _NewProductState extends State<NewProduct> {
               height: 16,
             ),
             Form(
-                key: formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      maxLength: 40,
-                      decoration: InputDecoration(
-                          label: const Text("Product Name"),
-                          icon: const Icon(Icons.add),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a product name';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        productName = value!;
-                      },
+              key: formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    maxLength: 40,
+                    decoration: InputDecoration(
+                      label: const Text("Product Name"),
+                      icon: const Icon(Icons.add),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                    TextFormField(
-                      maxLength: 40,
-                      decoration: InputDecoration(
-                          helperText: "Optional",
-                          label: const Text("Generic Name"),
-                          icon: const Icon(Icons.medication),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                      onSaved: (value) {
-                        genericName = value!;
-                      },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a product name';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      productName = value!;
+                    },
+                  ),
+                  TextFormField(
+                    maxLength: 40,
+                    decoration: InputDecoration(
+                      helperText: "Optional",
+                      label: const Text("Generic Name"),
+                      icon: const Icon(Icons.medication),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                    TextFormField(
-                      maxLength: 40,
-                      decoration: InputDecoration(
-                          label: const Text("Category"),
-                          icon: const Icon(Icons.category),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a category';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        category = value!;
-                      },
+                    onSaved: (value) {
+                      genericName = value!;
+                    },
+                  ),
+                  TextFormField(
+                    maxLength: 40,
+                    decoration: InputDecoration(
+                      label: const Text("Category"),
+                      icon: const Icon(Icons.category),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                    TextFormField(
-                      maxLength: 40,
-                      decoration: InputDecoration(
-                          label: const Text("Product Description"),
-                          icon: const Icon(Icons.description),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a product description';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        productDescription = value!;
-                      },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a category';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      category = value!;
+                    },
+                  ),
+                  TextFormField(
+                    maxLength: 40,
+                    decoration: InputDecoration(
+                      label: const Text("Product Description"),
+                      icon: const Icon(Icons.description),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                    TextFormField(
-                      maxLength: 40,
-                      decoration: InputDecoration(
-                          label: const Text("Price"),
-                          icon: const Icon(Icons.price_check),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a price';
-                        }
-                        if (double.tryParse(value) == null) {
-                          return 'Please enter a valid price';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        price = double.parse(value!);
-                      },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a product description';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      productDescription = value!;
+                    },
+                  ),
+                  TextFormField(
+                    maxLength: 40,
+                    decoration: InputDecoration(
+                      label: const Text("Price"),
+                      icon: const Icon(Icons.price_check),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                    ElevatedButton(
-                        onPressed: _submitForm,
-                        child: const Text("Add Product"))
-                  ],
-                )),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a price';
+                      }
+                      if (double.tryParse(value) == null) {
+                        return 'Please enter a valid price';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      price = double.parse(value!);
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: _submitForm,
+                    child: const Text("Add Product"),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

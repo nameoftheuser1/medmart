@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
         '/' : (context) => HomeScreen(),
         '/login': (context) => Login(),
         '/newproduct' : (context) => NewProduct(),
+        '/products' : (context) => ProductScreen()
       },
 
     );
