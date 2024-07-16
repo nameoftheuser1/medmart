@@ -47,12 +47,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     color: Colors.green,
                   ),
                   _buildDashboardCard(
-                    title: "Total Supplier",
-                    value: numberFormat.format(totalSupplier),
-                    icon: Icons.local_shipping,
-                    color: Colors.green,
-                  ),
-                  _buildDashboardCard(
                     title: "Nearly Expired",
                     value: numberFormat.format(nearlyExpired),
                     icon: Icons.explicit,

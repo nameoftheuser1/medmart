@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/' : (context) => HomeScreen(),
         '/login': (context) => Login(),
-        '/newproduct' : (context) => newProduct(),
+        '/newproduct' : (context) => NewProduct(),
       },
 
     );
