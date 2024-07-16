@@ -16,6 +16,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Padding(
         padding: const EdgeInsets.all(30.0),
         // add the picture here
@@ -30,7 +31,7 @@ class _LoginState extends State<Login> {
             ),
             SizedBox(height: 5.0),
             SizedBox(
-              height: 35.0,
+              height: 400.0,
               child: Card(
                 color: Colors.white,
                 elevation: 5.0,

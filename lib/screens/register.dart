@@ -17,6 +17,7 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
         backgroundColor: Colors.white70,
         body: Padding(
           padding: const EdgeInsets.all(30.0),
@@ -31,7 +32,7 @@ class _RegisterState extends State<Register> {
                 ),
               ),
               SizedBox(
-                height: 350.0,
+                height: 500.0,
                 child: Card(
                   color: Colors.white,
                   elevation: 5.0,

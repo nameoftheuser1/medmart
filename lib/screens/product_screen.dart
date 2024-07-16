@@ -50,10 +50,10 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Products"),
+        title: const Text("Products"),
         actions: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.add,
               color: Colors.white,
             ),
@@ -63,7 +63,7 @@ class _ProductScreenState extends State<ProductScreen> {
           ),
         ],
       ),
-      body: Padding(
+      body: const Padding(
         padding: EdgeInsets.all(8.0),
         child: Column(
             // children: products.map((product) => cardTemplate(product)).toList(),
@@ -94,26 +94,26 @@ class _newProductState extends State<newProduct> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text("Add products"),
+        title: const Text("Add products"),
       ),
       body: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Insert product details here.',
+            const Text('Insert product details here.',
                 style: TextStyle(
                     color: Colors.black54,
                     fontSize: 16,
                     fontWeight: FontWeight.bold)),
-            SizedBox(height: 16,),
+            const SizedBox(height: 16,),
             Form(child: Column(
               children: [
                 TextFormField(
                   maxLength: 40,
                   decoration: InputDecoration(
-                    label: Text("Product Name"),
-                    icon: Icon(Icons.add),
+                    label: const Text("Product Name"),
+                    icon: const Icon(Icons.add),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10)
                     )
@@ -123,8 +123,8 @@ class _newProductState extends State<newProduct> {
                   maxLength: 40,
                   decoration: InputDecoration(
                       helperText: "Optional",
-                      label: Text("Generic Name"),
-                      icon: Icon(Icons.medication),
+                      label: const Text("Generic Name"),
+                      icon: const Icon(Icons.medication),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)
                       )
@@ -133,8 +133,8 @@ class _newProductState extends State<newProduct> {
                 TextFormField(
                   maxLength: 40,
                   decoration: InputDecoration(
-                      label: Text("Category"),
-                      icon: Icon(Icons.medication),
+                      label: const Text("Category"),
+                      icon: const Icon(Icons.medication),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)
                       )
@@ -143,8 +143,8 @@ class _newProductState extends State<newProduct> {
                 TextFormField(
                   maxLength: 40,
                   decoration: InputDecoration(
-                      label: Text("Product Description"),
-                      icon: Icon(Icons.medication),
+                      label: const Text("Product Description"),
+                      icon: const Icon(Icons.medication),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)
                       )
@@ -153,14 +153,14 @@ class _newProductState extends State<newProduct> {
                 TextFormField(
                   maxLength: 40,
                   decoration: InputDecoration(
-                      label: Text("Price"),
-                      icon: Icon(Icons.medication),
+                      label: const Text("Price"),
+                      icon: const Icon(Icons.medication),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)
                       )
                   ),
                 ),
-                ElevatedButton(onPressed: (){}, child: Text("Add Product"))
+                ElevatedButton(onPressed: (){}, child: const Text("Add Product"))
               ],
             ))
           ],

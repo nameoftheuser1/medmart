@@ -20,10 +20,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Inventory"),
+        title: const Text("Inventory"),
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               // Implement search functionality here
             },
@@ -40,7 +40,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
               title: Text(item['name']),
               subtitle: Text('Quantity: ${item['quantity']}'),
               trailing: IconButton(
-                icon: Icon(Icons.edit),
+                icon: const Icon(Icons.edit),
                 onPressed: () {
                   // Implement edit functionality here
                 },
@@ -50,7 +50,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {
           // Implement add functionality here
         },

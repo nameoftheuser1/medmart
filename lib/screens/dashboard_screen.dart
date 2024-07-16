@@ -94,7 +94,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 18, color: Colors.white54),
+            Icon(icon, size: 40, color: Colors.black54),
             const SizedBox(height: 10),
             Text(
               title,
@@ -105,7 +105,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Text(
               value,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15, color: Colors.green),
+              style: const TextStyle(fontSize: 15, color: Colors.green),
             ),
           ],
         ),

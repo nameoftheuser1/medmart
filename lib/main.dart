@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medmart/screens/dashboard_screen.dart';
 import 'package:medmart/screens/inventory_screen.dart';
+import 'package:medmart/screens/login.dart';
 import 'package:medmart/screens/product_batch_screen.dart';
 import 'package:medmart/screens/product_screen.dart';
 import 'package:medmart/screens/register.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/' : (context) => HomeScreen(),
+        '/login': (context) => Login(),
         '/newproduct' : (context) => newProduct(),
       },
 
