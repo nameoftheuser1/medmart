@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:medmart/screens/register.dart';
+import 'package:http/http.dart' as http;
+import 'package:medmart/services/user.dart';
+
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -10,8 +15,27 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
-  String _username = '';
+  String _email = '';
   String _password = '';
+
+  login(User user) async {
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:8080/api/v1/auth/login'),
+      headers: <String, String>{
+        'Content-type' : 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(<String,  dynamic>{
+        'usernameOrEmail' : user.email,
+        'password' : user.password
+      }),
+    );
+    if (response.statusCode == 200) {
+      return 'Login successful';
+    } else {
+      return 'Login failed: ${response.body}';
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +53,7 @@ class _LoginState extends State<Login> {
                 width: 360,
               ),
             ),
-            SizedBox(height: 5.0),
+            const SizedBox(height: 5.0),
             SizedBox(
               height: 400.0,
               child: Card(
@@ -47,7 +71,7 @@ class _LoginState extends State<Login> {
                       children: [
                         TextFormField(
                           keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Username',
                             prefixIcon: Icon(Icons.person),
                           ),
@@ -58,11 +82,12 @@ class _LoginState extends State<Login> {
                             return null;
                           },
                           onSaved: (value) {
-                            _username = value!;
+                            _email = value!;
                           },
                         ),
                         const SizedBox(height: 20.0),
                         TextFormField(
+                          obscureText: true,
                           decoration: const InputDecoration(
                             labelText: 'Password',
                             prefixIcon: Icon(Icons.lock),
@@ -80,23 +105,29 @@ class _LoginState extends State<Login> {
                             _password = value!;
                           },
                         ),
-                        SizedBox(height: 30.0),
+                        const SizedBox(height: 30.0),
                         Column(
                           children: [
                             SizedBox(
                               width: 200.0,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all<Color>(
+                                  backgroundColor: MaterialStateProperty.all(
                                     Color.fromARGB(255, 73, 105, 76),
                                   ),
                                 ),
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
                                     _formKey.currentState!.save();
-                                    // Handle the login logic here
+                                    User user = User(username: '', email: _email, password: _password);
+                                    login(user);
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('Logging in')),
+                                      SnackBar(content: Text("Logging in")),
+                                    );
+                                    Navigator.pushNamed(context, '/');
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text("not accepted")),
                                     );
                                   }
                                 },
@@ -106,26 +137,19 @@ class _LoginState extends State<Login> {
                                 ),
                               ),
                             ),
-                            SizedBox(height:4.0),
-                            Row(
+                            const SizedBox(height: 4.0),
+                            const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Text(
                                   'or',
-                                  style: TextStyle(
-                                      color: Colors.black
-                                  ),
+                                  style: TextStyle(color: Colors.black),
                                 ),
                               ],
                             ),
                             SizedBox(
                               width: 201.0,
                               child: ElevatedButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all<Color>(
-                                    Color.fromARGB(255, 77, 77, 153),
-                                  ),
-                                ),
                                 onPressed: () {
                                   Navigator.pushReplacement(
                                     context,
@@ -134,6 +158,10 @@ class _LoginState extends State<Login> {
                                     ),
                                   );
                                 },
+                                style: const ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                      Color.fromARGB(255, 77, 77, 153)),
+                                ),
                                 child: const Text(
                                   'Create an Account',
                                   style: TextStyle(color: Colors.white),

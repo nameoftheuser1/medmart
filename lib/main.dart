@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         cardTheme: const CardTheme(color: Colors.white38,)
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
         '/' : (context) => HomeScreen(),
         '/login': (context) => Login(),
