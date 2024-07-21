@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:medmart/services/product.dart';
 import 'package:medmart/services/product_batch.dart';
@@ -15,21 +14,27 @@ class ProductBatchScreen extends StatefulWidget {
 }
 
 class _ProductBatchScreenState extends State<ProductBatchScreen> {
-  late Future<List<dynamic>> productBatches;
-  
-  Future<List<dynamic>> fetchData() async{
+  late Future<List<ProductBatch>> productBatches;
+
+  Future<List<ProductBatch>> fetchData() async {
     final response = await http.get(Uri.parse('http://10.0.2.2:8080/api/v1/batch/all'));
 
     final data = jsonDecode(response.body);
 
-    List productBatches = <ProductBatch> [];
+    List<ProductBatch> productBatches = [];
 
-    for(var productBatch in data){
+    for (var productBatch in data) {
       productBatches.add(ProductBatch.fromJson(productBatch));
     }
     return productBatches;
-
   }
+
+  Future<void> _refreshData() async {
+    setState(() {
+      productBatches = fetchData();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -43,37 +48,44 @@ class _ProductBatchScreenState extends State<ProductBatchScreen> {
       appBar: AppBar(
         title: Text("Product Batch"),
       ),
-      body: FutureBuilder<List<dynamic>>(
-        future: productBatches,
-        builder: (context, snapshot){
-          if(snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: SpinKitFadingCircle(
-                color: Colors.blue,
-                size: 50.0
-              ),
-            );
-          }else if(snapshot.hasError){
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          }else if(!snapshot.hasData || snapshot.data!.isEmpty){
-            return const Center(
-              child: Text('No product batches found'),
-            );
-          }else {
-            return ListView.builder(
+      body: RefreshIndicator(
+        onRefresh: _refreshData,
+        child: FutureBuilder<List<ProductBatch>>(
+          future: productBatches,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: SpinKitFadingCircle(
+                  color: Colors.blue,
+                  size: 50.0,
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text('No product batches found'),
+              );
+            } else {
+              return ListView.builder(
                 itemCount: snapshot.data!.length,
-                itemBuilder: (context, index){
-              return ProductBatchCard(productBatch: snapshot.data![index]);
-            });
-          }
-        },
+                itemBuilder: (context, index) {
+                  return ProductBatchCard(productBatch: snapshot.data![index]);
+                },
+              );
+            }
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          Navigator.pushNamed(context, '/newbatch');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const NewProductBatch()),
+          );
         },
       ),
     );
@@ -147,7 +159,7 @@ class _NewProductBatchState extends State<NewProductBatch> {
         // Wait for the SnackBar to be displayed
         await Future.delayed(const Duration(seconds: 2));
 
-        Navigator.pushNamed(context, '/product_batches');
+        Navigator.pop(context); // Navigate back to the previous screen
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to add product batch.')),
