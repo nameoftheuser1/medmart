@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medmart/services/dashboard_service.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -9,13 +10,47 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  int outOfStock = 56;
-  double totalSupplier = 900.00;
-  int nearlyExpired = 2302396;
-  int onlineOrders = 1245;
-  int todaysReport = 762;
+  final DashboardService dashboardService = DashboardService(baseUrl: 'http://10.0.2.2:8080');
+  int totalProductCount = 0;
+  int totalInventoryCount = 0;
+  int totalProductBatchesCount = 0;
+  int totalSalesCount = 0;
+  int salesPerDay = 0;
+  int salesPerWeek = 0;
 
   final numberFormat = NumberFormat.decimalPattern();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDashboardData();
+  }
+
+  Future<void> fetchDashboardData() async {
+    try {
+      final totalProductCount = await dashboardService.getTotalProductCount();
+      final totalInventoryCount = await dashboardService.getTotalInventoryCount();
+      final totalProductBatchesCount = await dashboardService.getTotalProductBatchesCount();
+      final totalSalesCount = await dashboardService.getTotalSalesCount();
+      final salesPerDay = await dashboardService.getSalesPerDay('2024-07-22');
+      final salesPerWeek = await dashboardService.getSalesPerWeek('2024-07-15');
+
+      setState(() {
+        this.totalProductCount = totalProductCount;
+        this.totalInventoryCount = totalInventoryCount;
+        this.totalProductBatchesCount = totalProductBatchesCount;
+        this.totalSalesCount = totalSalesCount;
+        this.salesPerDay = salesPerDay;
+        this.salesPerWeek = salesPerWeek;
+      });
+    } catch (e) {
+      print("Error fetching dashboard data: $e");
+    }
+  }
+
+  Future<void> _refreshData() async {
+    await fetchDashboardData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,45 +64,60 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                children: [
-                  _buildDashboardCard(
-                    title: "Out of Stock",
-                    value: numberFormat.format(outOfStock),
-                    icon: Icons.warning,
-                    color: Colors.green,
-                  ),
-                  _buildDashboardCard(
-                    title: "Nearly Expired",
-                    value: numberFormat.format(nearlyExpired),
-                    icon: Icons.explicit,
-                    color: Colors.green,
-                  ),
-                  _buildDashboardCard(
-                    title: "Online Orders",
-                    value: numberFormat.format(onlineOrders),
-                    icon: Icons.shopping_cart,
-                    color: Colors.green,
-                  ),
-                  _buildDashboardCard(
-                    title: "Today's Report",
-                    value: numberFormat.format(todaysReport),
-                    icon: Icons.report,
-                    color: Colors.green,
-                  ),
-                ],
+      body: RefreshIndicator(
+        onRefresh: _refreshData,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              Expanded(
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  children: [
+                    _buildDashboardCard(
+                      title: "Total Products",
+                      value: numberFormat.format(totalProductCount),
+                      icon: Icons.inventory,
+                      color: Colors.blue,
+                    ),
+                    _buildDashboardCard(
+                      title: "Total Inventory",
+                      value: numberFormat.format(totalInventoryCount),
+                      icon: Icons.store,
+                      color: Colors.green,
+                    ),
+                    _buildDashboardCard(
+                      title: "Total Product Batches",
+                      value: numberFormat.format(totalProductBatchesCount),
+                      icon: Icons.batch_prediction,
+                      color: Colors.orange,
+                    ),
+                    _buildDashboardCard(
+                      title: "Total Sales",
+                      value: numberFormat.format(totalSalesCount),
+                      icon: Icons.attach_money,
+                      color: Colors.red,
+                    ),
+                    _buildDashboardCard(
+                      title: "Sales Per Day",
+                      value: numberFormat.format(salesPerDay),
+                      icon: Icons.today,
+                      color: Colors.purple,
+                    ),
+                    _buildDashboardCard(
+                      title: "Sales Per Week",
+                      value: numberFormat.format(salesPerWeek),
+                      icon: Icons.calendar_view_week,
+                      color: Colors.pink,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -99,7 +149,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Text(
               value,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 15, color: Colors.green),
+              style: const TextStyle(fontSize: 25, color: Colors.green),
             ),
           ],
         ),
