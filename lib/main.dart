@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:medmart/screens/dashboard_screen.dart';
 import 'package:medmart/screens/inventory_screen.dart';
 import 'package:medmart/screens/login.dart';
 import 'package:medmart/screens/product_batch_screen.dart';
 import 'package:medmart/screens/product_screen.dart';
+import 'package:medmart/services/cart_service.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartService()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
