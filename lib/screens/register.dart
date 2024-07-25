@@ -135,6 +135,7 @@ class _RegisterState extends State<Register> {
                                   if (_formKey.currentState!.validate()) {
                                     _formKey.currentState!.save();
                                     User user = User(
+                                        id: '',
                                         username: _username,
                                         email: _email,
                                         password: _password);

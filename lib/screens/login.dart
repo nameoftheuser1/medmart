@@ -119,7 +119,7 @@ class _LoginState extends State<Login> {
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
                                     _formKey.currentState!.save();
-                                    User user = User(username: '', email: _email, password: _password);
+                                    User user = User(id: '' , username: '', email: _email, password: _password);
                                     login(user);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text("Logging in")),
