@@ -48,35 +48,43 @@ class _ProductBatchScreenState extends State<ProductBatchScreen> {
       appBar: AppBar(
         title: Text("Product Batch"),
       ),
-      body: RefreshIndicator(
-        onRefresh: _refreshData,
-        child: FutureBuilder<List<ProductBatch>>(
-          future: productBatches,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: SpinKitFadingCircle(
-                  color: Colors.blue,
-                  size: 50.0,
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
-              );
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(
-                child: Text('No product batches found'),
-              );
-            } else {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return ProductBatchCard(productBatch: snapshot.data![index]);
-                },
-              );
-            }
-          },
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/hh.jpg'),
+              fit: BoxFit.cover
+          ),
+        ),
+        child: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: FutureBuilder<List<ProductBatch>>(
+            future: productBatches,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: SpinKitFadingCircle(
+                    color: Colors.blue,
+                    size: 50.0,
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text('No product batches found'),
+                );
+              } else {
+                return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return ProductBatchCard(productBatch: snapshot.data![index]);
+                  },
+                );
+              }
+            },
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
