@@ -27,7 +27,7 @@ class InventoryCard extends StatelessWidget {
           icon: const Icon(Icons.add_shopping_cart),
           onPressed: () {
             final cartService = Provider.of<CartService>(context, listen: false);
-            cartService.addToCart(product, inventory.quantity);
+            cartService.addToCart(product);
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Product added to cart'),

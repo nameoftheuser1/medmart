@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:medmart/services/cart_service.dart';
-import 'package:medmart/services/cart_item.dart';
 import 'package:provider/provider.dart';
 
 class CartScreen extends StatelessWidget {
@@ -26,7 +25,7 @@ class CartScreen extends StatelessWidget {
           return Card(
             margin: const EdgeInsets.all(8.0),
             child: ListTile(
-              leading: Icon(Icons.shopping_cart),
+              leading: const Icon(Icons.shopping_cart),
               title: Text(cartItem.product.productName),
               subtitle: Text('Price: \$${cartItem.product.price}\nQuantity: ${cartItem.quantity}'),
               trailing: IconButton(

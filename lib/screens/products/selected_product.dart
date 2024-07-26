@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medmart/screens/products/edit_product_screen.dart';
 import 'package:medmart/services/product.dart';
-import 'package:medmart/services/api.dart';
 
 class SelectedProduct extends StatelessWidget {
   final Product product;

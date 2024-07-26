@@ -7,23 +7,33 @@ class CartService extends ChangeNotifier {
 
   List<CartItem> get items => _items;
 
-  void addToCart(Product product, int quantity) {
+  void addToCart(Product product) {
     final existingItem = _items.firstWhere(
           (item) => item.product.id == product.id,
       orElse: () => CartItem(product: product, quantity: 0),
     );
 
     if (existingItem.quantity > 0) {
-      existingItem.updateQuantity(existingItem.quantity + quantity);
+      existingItem.updateQuantity(existingItem.quantity + 1);
     } else {
-      _items.add(CartItem(product: product, quantity: quantity));
+      _items.add(CartItem(product: product, quantity: 1));
     }
 
     notifyListeners();
   }
 
   void removeFromCart(Product product) {
-    _items.removeWhere((item) => item.product.id == product.id);
+    final existingItem = _items.firstWhere(
+          (item) => item.product.id == product.id,
+      orElse: () => CartItem(product: product, quantity: 0),
+    );
+
+    if (existingItem.quantity > 1) {
+      existingItem.updateQuantity(existingItem.quantity - 1);
+    } else {
+      _items.removeWhere((item) => item.product.id == product.id);
+    }
+
     notifyListeners();
   }
 

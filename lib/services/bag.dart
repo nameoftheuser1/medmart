@@ -8,29 +8,29 @@ class Bag {
 
   Bag({
     required this.bagId,
-    required this.products,
     required this.userId,
     required this.numberOfOrder,
+    required this.products,
   });
 
   factory Bag.fromJson(Map<String, dynamic> json) {
-    var productsJson = json['products'] as List<dynamic>;
-    Set<Product> products = productsJson.map((productJson) {
-      return Product.fromJson(productJson);
-    }).toSet();
+    var productsFromJson = json['products'] as List;
+    Set<Product> productSet = productsFromJson.map((product) => Product.fromJson(product)).toSet();
 
     return Bag(
       bagId: json['bagId'],
-      products: products,
       userId: json['userId'],
       numberOfOrder: json['numberOfOrder'],
+      products: productSet,
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'bagId': bagId,
-    'products': products.map((product) => product.toJson()).toList(),
-    'userId': userId,
-    'numberOfOrder': numberOfOrder,
-  };
+  Map<String, dynamic> toJson() {
+    return {
+      'bagId': bagId,
+      'userId': userId,
+      'numberOfOrder': numberOfOrder,
+      'products': products.map((product) => product.toJson()).toList(),
+    };
+  }
 }
