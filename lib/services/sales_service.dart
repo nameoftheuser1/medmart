@@ -8,7 +8,7 @@ class SalesService {
   SalesService({required this.baseUrl});
 
   Future<List<Sales>> getAllSales() async {
-    final response = await http.get(Uri.parse('$baseUrl/api/v1/sales'));
+    final response = await http.get(Uri.parse('$baseUrl/api/v1/sales/all'));
 
     if (response.statusCode == 200) {
       List<dynamic> salesJson = json.decode(response.body);
@@ -28,7 +28,7 @@ class SalesService {
     }
   }
 
-  Future<void> createSales(Sales sales) async {
+  Future<Sales> createSales(Sales sales) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/api/v1/sales/create'),
@@ -41,7 +41,10 @@ class SalesService {
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
 
-      if (response.statusCode != 201) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Assuming the API now returns the created sale object
+        return Sales.fromJson(json.decode(response.body));
+      } else {
         throw Exception('Failed to create sales. Status code: ${response.statusCode}, Body: ${response.body}');
       }
     } catch (e) {
@@ -75,14 +78,12 @@ class SalesService {
 
 class Sales {
   final int id;
-  final int salesDetailsId;
   final int quantity;
   final DateTime saleDate;
   final double totalAmount;
 
   Sales({
     required this.id,
-    required this.salesDetailsId,
     required this.quantity,
     required this.saleDate,
     required this.totalAmount,
@@ -91,7 +92,6 @@ class Sales {
   factory Sales.fromJson(Map<String, dynamic> json) {
     return Sales(
       id: json['id'],
-      salesDetailsId: json['salesDetailsId'],
       quantity: json['quantity'],
       saleDate: DateTime.parse(json['saleDate']),
       totalAmount: json['totalAmount'],
@@ -101,7 +101,6 @@ class Sales {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'salesDetailsId': salesDetailsId,
       'quantity': quantity,
       'saleDate': saleDate.toIso8601String(),
       'totalAmount': totalAmount,
