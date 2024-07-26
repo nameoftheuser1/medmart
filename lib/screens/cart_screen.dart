@@ -99,14 +99,16 @@ class CartScreen extends StatelessWidget {
                     const SnackBar(content: Text('Checkout successful!')),
                   );
 
-                  cartService.clearCart();
-                  Navigator.pop(context);
+
                 } catch (e) {
                   print('Checkout failed. Error: $e');
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Checkout failed. Please try again.')),
                   );
                 }
+
+                cartService.clearCart();
+                Navigator.pop(context);
               },
               child: const Text('Checkout'),
             ),

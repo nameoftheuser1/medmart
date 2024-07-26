@@ -49,6 +49,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       });
     } catch (e) {
       print("Error fetching dashboard data: $e");
+      setState(() {
+        totalProductCount = 0;
+        totalInventoryCount = 0;
+        totalProductBatchesCount = 0;
+        totalSalesCount = 0;
+        salesPerDay = 0.0;
+        salesPerWeek = 0.0;
+      });
     }
   }
 

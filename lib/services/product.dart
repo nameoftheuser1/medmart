@@ -1,4 +1,22 @@
 import 'package:medmart/services/product_batch.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class ProductService {
+  final String baseUrl;
+
+  ProductService(this.baseUrl);
+
+  Future<Product> getProductById(int id) async {
+    final response = await http.get(Uri.parse('$baseUrl/api/v1/product/$id'));
+
+    if (response.statusCode == 200) {
+      return Product.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load product');
+    }
+  }
+}
 
 class Product {
   final int id;

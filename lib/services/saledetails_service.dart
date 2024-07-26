@@ -35,6 +35,21 @@ class SalesDetailsService {
     }
   }
 
+  Future<List<SalesDetails>> getSalesDetailsBySalesId(int salesId) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/api/v1/salesdetails/by-sales-id?salesId=$salesId'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> salesDetailsJson = json.decode(response.body);
+        return salesDetailsJson.map((json) => SalesDetails.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load sales details by salesId: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching sales details by salesId: $e');
+    }
+  }
+
   Future<void> createSalesDetails(SalesDetails salesDetails) async {
     try {
       final response = await http.post(

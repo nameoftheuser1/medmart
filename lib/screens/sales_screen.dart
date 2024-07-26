@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medmart/services/sales_service.dart';
+import 'package:medmart/widgets/sales_card.dart';
 
 class SalesScreen extends StatefulWidget {
   final SalesService salesService;
@@ -16,7 +17,13 @@ class _SalesScreenState extends State<SalesScreen> {
   @override
   void initState() {
     super.initState();
-    futureSales = widget.salesService.getAllSales();
+    _fetchSales();
+  }
+
+  Future<void> _fetchSales() async {
+    setState(() {
+      futureSales = widget.salesService.getAllSales();
+    });
   }
 
   @override
@@ -24,36 +31,36 @@ class _SalesScreenState extends State<SalesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Sales Details'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: _fetchSales,
+            tooltip: 'Refresh Sales Data',
+          ),
+        ],
       ),
-      body: FutureBuilder<List<Sales>>(
-        future: futureSales,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No sales found'));
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                final sales = snapshot.data![index];
-                return ListTile(
-                  title: Text('Sale ID: ${sales.id}'),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Quantity: ${sales.quantity}'),
-                      Text('Sale Date: ${sales.saleDate.toLocal().toString().split(' ')[0]}'),
-                      Text('Total Amount: \$${sales.totalAmount}'),
-                    ],
-                  ),
-                );
-              },
-            );
-          }
-        },
+      body: RefreshIndicator(
+        onRefresh: _fetchSales,
+        child: FutureBuilder<List<Sales>>(
+          future: futureSales,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No sales found', style: TextStyle(fontSize: 16, color: Colors.grey[600])));
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final sales = snapshot.data![index];
+                  return SalesCard(sales: sales);
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }
