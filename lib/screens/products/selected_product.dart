@@ -11,7 +11,8 @@ class SelectedProduct extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(product.productName),
+        title: Text(product.productName,
+        style: TextStyle(fontWeight: FontWeight.bold),),
         actions: [
           IconButton(
             icon: Icon(Icons.edit),
@@ -26,23 +27,41 @@ class SelectedProduct extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              product.productName,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            "assets/blur.jpg",
+            fit: BoxFit.cover,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+
+                Text(
+                  'Generic Name:${product.genericName}',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
+                ),
+                Text(
+                  'Category: ${product.category}',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
+                ),
+                Text(
+                  'Description: ${product.productDescription}',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
+                ),
+                SizedBox(height: 0.0),
+                Text(
+                  'Price: \$${product.price.toStringAsFixed(2)}',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
+                ),
+              ],
             ),
-            SizedBox(height: 8.0),
-            Text('Generic Name: ${product.genericName}'),
-            Text('Category: ${product.category}'),
-            Text('Description: ${product.productDescription}'),
-            SizedBox(height: 8.0),
-            Text('Price: \$${product.price.toStringAsFixed(2)}'),
-            // Add more widgets if necessary to display additional product details
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
