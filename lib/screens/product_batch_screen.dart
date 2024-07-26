@@ -15,30 +15,50 @@ class ProductBatchScreen extends StatefulWidget {
 
 class _ProductBatchScreenState extends State<ProductBatchScreen> {
   late Future<List<ProductBatch>> productBatches;
+  late Future<List<Product>> products;
 
-  Future<List<ProductBatch>> fetchData() async {
+  Future<List<ProductBatch>> fetchProductBatches() async {
     final response = await http.get(Uri.parse('http://10.0.2.2:8080/api/v1/batch/all'));
 
-    final data = jsonDecode(response.body);
-
-    List<ProductBatch> productBatches = [];
-
-    for (var productBatch in data) {
-      productBatches.add(ProductBatch.fromJson(productBatch));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      List<ProductBatch> productBatches = [];
+      for (var productBatch in data) {
+        productBatches.add(ProductBatch.fromJson(productBatch));
+      }
+      return productBatches;
+    } else {
+      throw Exception('Failed to load product batches');
     }
-    return productBatches;
+  }
+
+  Future<List<Product>> fetchProducts() async {
+    final response = await http.get(Uri.parse('http://10.0.2.2:8080/api/v1/product/all'));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      List<Product> products = [];
+      for (var product in data) {
+        products.add(Product.fromJson(product));
+      }
+      return products;
+    } else {
+      throw Exception('Failed to load products');
+    }
   }
 
   Future<void> _refreshData() async {
     setState(() {
-      productBatches = fetchData();
+      productBatches = fetchProductBatches();
+      products = fetchProducts();
     });
   }
 
   @override
   void initState() {
     super.initState();
-    productBatches = fetchData();
+    productBatches = fetchProductBatches();
+    products = fetchProducts();
   }
 
   @override
@@ -46,45 +66,50 @@ class _ProductBatchScreenState extends State<ProductBatchScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text("Product Batch"),
+        title: const Text("Product Batch"),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/hh.jpg'),
-              fit: BoxFit.cover
-          ),
-        ),
-        child: RefreshIndicator(
-          onRefresh: _refreshData,
-          child: FutureBuilder<List<ProductBatch>>(
-            future: productBatches,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: SpinKitFadingCircle(
-                    color: Colors.blue,
-                    size: 50.0,
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error: ${snapshot.error}'),
-                );
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Text('No product batches found'),
-                );
-              } else {
-                return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    return ProductBatchCard(productBatch: snapshot.data![index]);
-                  },
-                );
-              }
-            },
-          ),
+      body: RefreshIndicator(
+        onRefresh: _refreshData,
+        child: FutureBuilder(
+          future: Future.wait([productBatches, products]),
+          builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: SpinKitFadingCircle(
+                  color: Colors.blue,
+                  size: 50.0,
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text('No product batches found'),
+              );
+            } else {
+              final productBatches = snapshot.data![0] as List<ProductBatch>;
+              final products = snapshot.data![1] as List<Product>;
+
+              // Create a map for quick lookup of product by id
+              final productMap = {for (var p in products) p.id: p};
+
+              return ListView.builder(
+                itemCount: productBatches.length,
+                itemBuilder: (context, index) {
+                  final productBatch = productBatches[index];
+                  final product = productMap[productBatch.productId];
+                  return product != null
+                      ? ProductBatchCard(
+                    product: product,
+                    productBatch: productBatch,
+                  )
+                      : const ListTile(title: Text('Product not found'));
+                },
+              );
+            }
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(
