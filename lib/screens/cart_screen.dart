@@ -57,7 +57,7 @@ class CartScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                // Handle checkout logic here
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Checkout functionality not implemented'),
