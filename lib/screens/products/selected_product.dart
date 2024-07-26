@@ -11,7 +11,8 @@ class SelectedProduct extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(product.productName),
+        title: Text(product.productName,
+        style: TextStyle(fontWeight: FontWeight.bold),),
         actions: [
           IconButton(
             icon: Icon(Icons.edit),
@@ -37,14 +38,11 @@ class SelectedProduct extends StatelessWidget {
             padding: const EdgeInsets.all(15.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+
                 Text(
-                  product.productName,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
-                ),
-                SizedBox(height: 20.0),
-                Text(
-                  'Generic Name: ${product.genericName}',
+                  'Generic Name:${product.genericName}',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
                 ),
                 Text(
