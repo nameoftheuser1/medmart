@@ -48,35 +48,43 @@ class _InventoryScreenState extends State<InventoryScreen> {
       appBar: AppBar(
         title: const Text("Inventory"),
       ),
-      body: RefreshIndicator(
-        onRefresh: _refreshData,
-        child: FutureBuilder<List<Inventory>>(
-          future: inventoryItems,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: SpinKitFadingCircle(
-                  color: Colors.blue,
-                  size: 50.0,
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
-              );
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(
-                child: Text('No inventory items found'),
-              );
-            } else {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return InventoryCard(inventory: snapshot.data![index]);
-                },
-              );
-            }
-          },
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/hh.jpg'),
+              fit: BoxFit.cover
+          ),
+        ),
+        child: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: FutureBuilder<List<Inventory>>(
+            future: inventoryItems,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: SpinKitFadingCircle(
+                    color: Colors.blue,
+                    size: 50.0,
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text('No inventory items found'),
+                );
+              } else {
+                return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return InventoryCard(inventory: snapshot.data![index]);
+                  },
+                );
+              }
+            },
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

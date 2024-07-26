@@ -64,59 +64,67 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ),
-      body: RefreshIndicator(
-        onRefresh: _refreshData,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  children: [
-                    _buildDashboardCard(
-                      title: "Total Products",
-                      value: numberFormat.format(totalProductCount),
-                      icon: Icons.inventory,
-                      color: Colors.blue,
-                    ),
-                    _buildDashboardCard(
-                      title: "Total Inventory",
-                      value: numberFormat.format(totalInventoryCount),
-                      icon: Icons.store,
-                      color: Colors.green,
-                    ),
-                    _buildDashboardCard(
-                      title: "Total Product Batches",
-                      value: numberFormat.format(totalProductBatchesCount),
-                      icon: Icons.batch_prediction,
-                      color: Colors.orange,
-                    ),
-                    _buildDashboardCard(
-                      title: "Total Sales",
-                      value: numberFormat.format(totalSalesCount),
-                      icon: Icons.attach_money,
-                      color: Colors.red,
-                    ),
-                    _buildDashboardCard(
-                      title: "Sales Per Day",
-                      value: numberFormat.format(salesPerDay),
-                      icon: Icons.today,
-                      color: Colors.purple,
-                    ),
-                    _buildDashboardCard(
-                      title: "Sales Per Week",
-                      value: numberFormat.format(salesPerWeek),
-                      icon: Icons.calendar_view_week,
-                      color: Colors.pink,
-                    ),
-                  ],
+      body: Container(
+        decoration: BoxDecoration(
+         image: DecorationImage(
+       image: AssetImage('assets/hh.jpg'),
+    fit: BoxFit.cover
+    ),
+    ),
+        child: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                Expanded(
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    children: [
+                      _buildDashboardCard(
+                        title: "Total Products",
+                        value: numberFormat.format(totalProductCount),
+                        icon: Icons.inventory,
+                        color: Colors.blue,
+                      ),
+                      _buildDashboardCard(
+                        title: "Total Inventory",
+                        value: numberFormat.format(totalInventoryCount),
+                        icon: Icons.store,
+                        color: Colors.green,
+                      ),
+                      _buildDashboardCard(
+                        title: "Total Product Batches",
+                        value: numberFormat.format(totalProductBatchesCount),
+                        icon: Icons.batch_prediction,
+                        color: Colors.orange,
+                      ),
+                      _buildDashboardCard(
+                        title: "Total Sales",
+                        value: numberFormat.format(totalSalesCount),
+                        icon: Icons.attach_money,
+                        color: Colors.red,
+                      ),
+                      _buildDashboardCard(
+                        title: "Sales Per Day",
+                        value: numberFormat.format(salesPerDay),
+                        icon: Icons.today,
+                        color: Colors.purple,
+                      ),
+                      _buildDashboardCard(
+                        title: "Sales Per Week",
+                        value: numberFormat.format(salesPerWeek),
+                        icon: Icons.calendar_view_week,
+                        color: Colors.pink,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
