@@ -3,14 +3,12 @@ import 'package:medmart/services/cart_service.dart';
 import 'package:medmart/services/saledetails_service.dart';
 import 'package:medmart/services/sales_service.dart';
 import 'package:provider/provider.dart';
-import 'package:medmart/screens/inventory_screen.dart';
 
 class CartScreen extends StatelessWidget {
   final SalesDetailsService salesDetailsService;
   final SalesService salesService;
 
-  const CartScreen({super.key, required
-  this.salesDetailsService, required this.salesService});
+  const CartScreen({super.key, required this.salesDetailsService, required this.salesService});
 
   @override
   Widget build(BuildContext context) {
@@ -65,57 +63,50 @@ class CartScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () async {
-                // Calculate total quantity and amount
                 int totalQuantity = cartService.items.fold(0, (sum, item) => sum + item.quantity);
                 double totalAmount = cartService.totalAmount;
 
-                // Create a new Sales record
                 final newSale = Sales(
                   id: 0,
-                  salesDetailsId: 0,
                   quantity: totalQuantity,
                   saleDate: DateTime.now(),
                   totalAmount: totalAmount,
                 );
 
                 try {
-                  // Create the Sales record
-                  await salesService.createSales(newSale);
-                  print('Created sale: ${newSale.toJson()}');
+                  final createdSale = await salesService.createSales(newSale);
+                  print('Created sale: ${createdSale.toJson()}');
 
-                  // Create SalesDetails for each item
+                  List<Future<void>> salesDetailsFutures = [];
+
                   for (var item in cartService.items) {
-                    try {
-                      final salesDetails = SalesDetails(
-                        id: 0,
-                        productId: item.product.id,
-                        quantity: item.quantity,
-                        price: item.product.price,
-                      );
-                      await salesDetailsService.createSalesDetails(salesDetails);
-                      print('Inserted: ${salesDetails.toJson()}');
-                    } catch (e) {
-                      print('Failed to insert item: ${item.product.id}. Error: $e');
-                    }
+                    final salesDetails = SalesDetails(
+                      id: 0,
+                      salesId: createdSale.id,
+                      productId: item.product.id,
+                      quantity: item.quantity,
+                      price: item.product.price,
+                    );
+
+                    print('Creating SalesDetails: ${salesDetails.toJson()}');
+                    salesDetailsFutures.add(salesDetailsService.createSalesDetails(salesDetails));
                   }
 
-                  // Show a success message
+                  await Future.wait(salesDetailsFutures);
+                  print('All sales details created successfully.');
+
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Checkout successful!')),
                   );
+
+                  cartService.clearCart();
+                  Navigator.pop(context);
                 } catch (e) {
-                  print('Failed to create sale. Error: $e');
+                  print('Checkout failed. Error: $e');
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Checkout failed. Please try again.')),
                   );
                 }
-
-                // Clear the cart and navigate back to the inventory screen
-                cartService.clearCart();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const InventoryScreen()),
-                );
               },
               child: const Text('Checkout'),
             ),
