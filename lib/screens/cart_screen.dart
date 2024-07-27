@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:medmart/services/cart_service.dart';
+import 'package:medmart/services/saledetails_service.dart';
+import 'package:medmart/services/sales_service.dart';
 import 'package:provider/provider.dart';
 
 class CartScreen extends StatelessWidget {
-  const CartScreen({super.key});
+  final SalesDetailsService salesDetailsService;
+  final SalesService salesService;
+
+  const CartScreen({super.key, required this.salesDetailsService, required this.salesService});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +32,8 @@ class CartScreen extends StatelessWidget {
             child: ListTile(
               leading: const Icon(Icons.shopping_cart),
               title: Text(cartItem.product.productName),
-              subtitle: Text('Price: \$${cartItem.product.price}\nQuantity: ${cartItem.quantity}'),
+              subtitle: Text(
+                  'Price: \$${cartItem.product.price}\nQuantity: ${cartItem.quantity}'),
               trailing: IconButton(
                 icon: const Icon(Icons.remove_circle),
                 onPressed: () {
@@ -56,13 +62,53 @@ class CartScreen extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                int totalQuantity = cartService.items.fold(0, (sum, item) => sum + item.quantity);
+                double totalAmount = cartService.totalAmount;
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Checkout functionality not implemented'),
-                  ),
+                final newSale = Sales(
+                  id: 0,
+                  quantity: totalQuantity,
+                  saleDate: DateTime.now(),
+                  totalAmount: totalAmount,
                 );
+
+                try {
+                  final createdSale = await salesService.createSales(newSale);
+                  print('Created sale: ${createdSale.toJson()}');
+
+                  List<Future<void>> salesDetailsFutures = [];
+
+                  for (var item in cartService.items) {
+                    final salesDetails = SalesDetails(
+                      id: 0,
+                      salesId: createdSale.id,
+                      productId: item.product.id,
+                      quantity: item.quantity,
+                      price: item.product.price,
+                    );
+
+                    print('Creating SalesDetails: ${salesDetails.toJson()}');
+                    salesDetailsFutures.add(salesDetailsService.createSalesDetails(salesDetails));
+                  }
+
+                  await Future.wait(salesDetailsFutures);
+                  print('All sales details created successfully.');
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Checkout successful!')),
+                  );
+
+
+                } catch (e) {
+                  print('Checkout failed. Error: $e');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Checkout failed. Please try again.')),
+                  );
+                }
+
+                cartService.clearCart();
+                Navigator.pop(context);
               },
               child: const Text('Checkout'),
             ),

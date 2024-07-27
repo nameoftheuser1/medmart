@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medmart/screens/sales_screen.dart';
+import 'package:medmart/services/sales_service.dart';
 import 'package:provider/provider.dart';
 import 'package:medmart/screens/dashboard_screen.dart';
 import 'package:medmart/screens/inventory_screen.dart';
@@ -72,6 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const ProductScreen(),
     const ProductBatchScreen(),
     const InventoryScreen(),
+    SalesScreen(salesService: SalesService(baseUrl: 'http://10.0.2.2:8080')),
   ];
 
   void _onItemTapped(int index) {
@@ -102,6 +105,10 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: 'Inventory',
+          ),
+          BottomNavigationBarItem( // Add this item
+            icon: Icon(Icons.attach_money),
+            label: 'Sales',
           ),
 
         ],

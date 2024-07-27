@@ -15,8 +15,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int totalInventoryCount = 0;
   int totalProductBatchesCount = 0;
   int totalSalesCount = 0;
-  int salesPerDay = 0;
-  int salesPerWeek = 0;
+  double salesPerDay = 0.0;
+  double salesPerWeek = 0.0;
 
   final numberFormat = NumberFormat.decimalPattern();
 
@@ -28,12 +28,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> fetchDashboardData() async {
     try {
+      DateTime now = DateTime.now();
+      String formattedDate = DateFormat('yyyy-MM-dd').format(now);
+      String startOfWeekDate = DateFormat('yyyy-MM-dd').format(now.subtract(Duration(days: now.weekday - 1)));
+
       final totalProductCount = await dashboardService.getTotalProductCount();
       final totalInventoryCount = await dashboardService.getTotalInventoryCount();
       final totalProductBatchesCount = await dashboardService.getTotalProductBatchesCount();
       final totalSalesCount = await dashboardService.getTotalSalesCount();
-      final salesPerDay = await dashboardService.getSalesPerDay('2024-07-22');
-      final salesPerWeek = await dashboardService.getSalesPerWeek('2024-07-15');
+      final salesPerDay = await dashboardService.getSalesPerDay(formattedDate);
+      final salesPerWeek = await dashboardService.getSalesPerWeek(startOfWeekDate);
 
       setState(() {
         this.totalProductCount = totalProductCount;
@@ -45,6 +49,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       });
     } catch (e) {
       print("Error fetching dashboard data: $e");
+      setState(() {
+        totalProductCount = 0;
+        totalInventoryCount = 0;
+        totalProductBatchesCount = 0;
+        totalSalesCount = 0;
+        salesPerDay = 0.0;
+        salesPerWeek = 0.0;
+      });
     }
   }
 
@@ -66,11 +78,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: Container(
         decoration: BoxDecoration(
-         image: DecorationImage(
-       image: AssetImage('assets/hh.jpg'),
-    fit: BoxFit.cover
-    ),
-    ),
+          image: DecorationImage(
+              image: AssetImage('assets/hh.jpg'),
+              fit: BoxFit.cover
+          ),
+        ),
         child: RefreshIndicator(
           onRefresh: _refreshData,
           child: Padding(

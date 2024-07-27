@@ -8,7 +8,7 @@ class SalesService {
   SalesService({required this.baseUrl});
 
   Future<List<Sales>> getAllSales() async {
-    final response = await http.get(Uri.parse('$baseUrl/sales'));
+    final response = await http.get(Uri.parse('$baseUrl/api/v1/sales/all'));
 
     if (response.statusCode == 200) {
       List<dynamic> salesJson = json.decode(response.body);
@@ -19,7 +19,7 @@ class SalesService {
   }
 
   Future<Sales> getSalesById(Long id) async {
-    final response = await http.get(Uri.parse('$baseUrl/sales/$id'));
+    final response = await http.get(Uri.parse('$baseUrl/api/v1/sales/$id'));
 
     if (response.statusCode == 200) {
       return Sales.fromJson(json.decode(response.body));
@@ -28,23 +28,34 @@ class SalesService {
     }
   }
 
-  Future<void> createSales(Sales sales) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/sales'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: json.encode(sales.toJson()),
-    );
+  Future<Sales> createSales(Sales sales) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/v1/sales/create'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(sales.toJson()),
+      );
 
-    if (response.statusCode != 201) {
-      throw Exception('Failed to create sales');
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Assuming the API now returns the created sale object
+        return Sales.fromJson(json.decode(response.body));
+      } else {
+        throw Exception('Failed to create sales. Status code: ${response.statusCode}, Body: ${response.body}');
+      }
+    } catch (e) {
+      print('Error in createSales: $e');
+      throw e;
     }
   }
 
   Future<void> updateSales(Long id, Sales sales) async {
     final response = await http.put(
-      Uri.parse('$baseUrl/sales/$id'),
+      Uri.parse('$baseUrl/api/v1/sales/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -57,7 +68,7 @@ class SalesService {
   }
 
   Future<void> deleteSales(Long id) async {
-    final response = await http.delete(Uri.parse('$baseUrl/sales/$id'));
+    final response = await http.delete(Uri.parse('$baseUrl/api/v1/sales/$id'));
 
     if (response.statusCode != 204) {
       throw Exception('Failed to delete sales');
@@ -66,15 +77,13 @@ class SalesService {
 }
 
 class Sales {
-  final Long id;
-  final Long salesDetailsId;
+  final int id;
   final int quantity;
   final DateTime saleDate;
   final double totalAmount;
 
   Sales({
     required this.id,
-    required this.salesDetailsId,
     required this.quantity,
     required this.saleDate,
     required this.totalAmount,
@@ -83,7 +92,6 @@ class Sales {
   factory Sales.fromJson(Map<String, dynamic> json) {
     return Sales(
       id: json['id'],
-      salesDetailsId: json['salesDetailsId'],
       quantity: json['quantity'],
       saleDate: DateTime.parse(json['saleDate']),
       totalAmount: json['totalAmount'],
@@ -93,7 +101,6 @@ class Sales {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'salesDetailsId': salesDetailsId,
       'quantity': quantity,
       'saleDate': saleDate.toIso8601String(),
       'totalAmount': totalAmount,

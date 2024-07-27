@@ -42,19 +42,29 @@ class DashboardService {
     }
   }
 
-  Future<int> getSalesPerDay(String date) async {
+  Future<double> getSalesPerDay(String date) async {
     final response = await http.get(Uri.parse('$baseUrl/api/v1/dashboard/salesPerDay?date=$date'));
     if (response.statusCode == 200) {
-      return int.parse(response.body);
+      try {
+        return double.parse(response.body);
+      } catch (e) {
+        print("Error parsing sales per day: ${response.body}");
+        return 0.0;
+      }
     } else {
       throw Exception('Failed to load sales per day');
     }
   }
 
-  Future<int> getSalesPerWeek(String startDate) async {
+  Future<double> getSalesPerWeek(String startDate) async {
     final response = await http.get(Uri.parse('$baseUrl/api/v1/dashboard/salesPerWeek?startDate=$startDate'));
     if (response.statusCode == 200) {
-      return int.parse(response.body);
+      try {
+        return double.parse(response.body);
+      } catch (e) {
+        print("Error parsing sales per week: ${response.body}");
+        return 0.0;
+      }
     } else {
       throw Exception('Failed to load sales per week');
     }
