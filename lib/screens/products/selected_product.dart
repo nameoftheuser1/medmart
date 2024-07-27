@@ -36,29 +36,38 @@ class SelectedProduct extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-
-                Text(
-                  'Generic Name:${product.genericName}',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
+            child: Card(
+              color: Colors.black12,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Product Name:${product.productName}',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
+                    ),
+                    Text(
+                      'Generic Name:${product.genericName}',
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                    Text(
+                      'Category: ${product.category}',
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                    Text(
+                      'Description: ${product.productDescription}',
+                      style: TextStyle( fontSize: 16.0),
+                    ),
+                    SizedBox(height: 0.0),
+                    Text(
+                      'Price: \$${product.price.toStringAsFixed(2)}',
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                  ],
                 ),
-                Text(
-                  'Category: ${product.category}',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
-                ),
-                Text(
-                  'Description: ${product.productDescription}',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
-                ),
-                SizedBox(height: 0.0),
-                Text(
-                  'Price: \$${product.price.toStringAsFixed(2)}',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
-                ),
-              ],
+              ),
             ),
           ),
         ],
