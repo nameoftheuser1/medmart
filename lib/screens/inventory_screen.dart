@@ -84,6 +84,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 MaterialPageRoute(builder: (context) => CartScreen(
                   salesDetailsService: salesDetailsService,
                   salesService: SalesService(baseUrl: baseUrl),
+                  inventoryService: InventoryService(baseUrl: baseUrl),
                 )),
               );
             },

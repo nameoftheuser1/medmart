@@ -39,7 +39,7 @@ class ProductCard extends StatelessWidget {
                 ],
               ),
               Text(product.category),
-              Text("\$${product.price.toStringAsFixed(2)}"),
+              Text("₱${product.price.toStringAsFixed(2)}"),
               Text(product.productDescription),
             ],
           ),

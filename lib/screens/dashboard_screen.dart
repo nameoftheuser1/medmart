@@ -122,13 +122,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       _buildDashboardCard(
                         title: "Sales Per Day",
-                        value: numberFormat.format(salesPerDay),
+                        value: '₱${numberFormat.format(salesPerDay)}',
                         icon: Icons.today,
                         color: Colors.purple,
                       ),
                       _buildDashboardCard(
                         title: "Sales Per Week",
-                        value: numberFormat.format(salesPerWeek),
+                        value: '₱${numberFormat.format(salesPerWeek)}',
                         icon: Icons.calendar_view_week,
                         color: Colors.pink,
                       ),

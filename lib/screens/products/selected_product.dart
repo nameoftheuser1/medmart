@@ -12,10 +12,10 @@ class SelectedProduct extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(product.productName,
-        style: TextStyle(fontWeight: FontWeight.bold),),
+        style: const TextStyle(fontWeight: FontWeight.bold),),
         actions: [
           IconButton(
-            icon: Icon(Icons.edit),
+            icon: const Icon(Icons.edit),
             onPressed: () {
               Navigator.push(
                 context,
@@ -46,24 +46,24 @@ class SelectedProduct extends StatelessWidget {
                   children: [
                     Text(
                       'Product Name:${product.productName}',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
                     ),
                     Text(
                       'Generic Name:${product.genericName}',
-                      style: TextStyle(fontSize: 16.0),
+                      style: const TextStyle(fontSize: 16.0),
                     ),
                     Text(
                       'Category: ${product.category}',
-                      style: TextStyle(fontSize: 16.0),
+                      style: const TextStyle(fontSize: 16.0),
                     ),
-                    Text(
-                      'Description: ${product.productDescription}',
-                      style: TextStyle( fontSize: 16.0),
-                    ),
-                    SizedBox(height: 0.0),
                     Text(
                       'Price: \$${product.price.toStringAsFixed(2)}',
-                      style: TextStyle(fontSize: 16.0),
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
+                    const SizedBox(height: 15.0),
+                    Text(
+                      'Description: ${product.productDescription}',
+                      style: const TextStyle( fontSize: 16.0),
                     ),
                   ],
                 ),

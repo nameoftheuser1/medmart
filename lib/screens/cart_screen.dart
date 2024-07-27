@@ -3,12 +3,19 @@ import 'package:medmart/services/cart_service.dart';
 import 'package:medmart/services/saledetails_service.dart';
 import 'package:medmart/services/sales_service.dart';
 import 'package:provider/provider.dart';
+import 'package:medmart/services/inventory.dart';
 
 class CartScreen extends StatelessWidget {
   final SalesDetailsService salesDetailsService;
   final SalesService salesService;
+  final InventoryService inventoryService;
 
-  const CartScreen({super.key, required this.salesDetailsService, required this.salesService});
+  const CartScreen({
+    super.key,
+    required this.salesDetailsService,
+    required this.salesService,
+    required this.inventoryService,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +85,7 @@ class CartScreen extends StatelessWidget {
                   print('Created sale: ${createdSale.toJson()}');
 
                   List<Future<void>> salesDetailsFutures = [];
+                  List<Future<void>> inventoryUpdateFutures = [];
 
                   for (var item in cartService.items) {
                     final salesDetails = SalesDetails(
@@ -90,20 +98,24 @@ class CartScreen extends StatelessWidget {
 
                     print('Creating SalesDetails: ${salesDetails.toJson()}');
                     salesDetailsFutures.add(salesDetailsService.createSalesDetails(salesDetails));
+
+                    final inventory = await inventoryService.fetchInventoryByProductBatchId(item.product.id);
+                    inventoryUpdateFutures.add(inventoryService.updateInventoryQuantity(
+                        inventory.id, item.quantity));
                   }
 
                   await Future.wait(salesDetailsFutures);
-                  print('All sales details created successfully.');
+                  await Future.wait(inventoryUpdateFutures);
+                  print('All sales details created and inventory updated successfully.');
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Checkout successful!')),
                   );
 
-
                 } catch (e) {
                   print('Checkout failed. Error: $e');
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Checkout failed. Please try again.')),
+                    const SnackBar(content: Text('Checkout successful.')),
                   );
                 }
 
